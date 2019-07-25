@@ -1,0 +1,6 @@
+*~
+
+#python-package
+*.egg-info/
+build
+dist
