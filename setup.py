@@ -8,16 +8,28 @@ def read_requirements():
         requirements = [line.rstrip() for line in f]
     return requirements
 
+try:
+    with open('README.md') as f:
+        readme = f.read()
+except IOError:
+    readme = ''
+
+try:
+    with open('LICENSE') as f:
+        license = f.read()
+except IOError:
+    license = ''
+
 setup(
-    name='actuary',
+    name='actuapy',
     version='0.0.1',
     description='useful snippets for actuaries',
-    long_description="README.md",
+    long_description=readme,
     author='Rei Mizuta',
     author_email='ayanamizuta832@gmail.com',
     install_requires=read_requirements(),
     url='https://github.com/ayanamizuta/actuary',
-    license="LICENSE",
+    license=license,
     packages=find_packages(exclude=('tests', 'docs')),
     test_suite='tests'
 )

@@ -1,23 +1,39 @@
 import unittest
+import pandas as pd
+import os,sys
+from actuapy.util import *
+
+test_data_path = os.path.abspath(os.path.dirname(__file__))+"/data/"
 
 class TestCore(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # procedures before tests are started. This code block is executed only once
+        pass
 
     @classmethod
     def tearDownClass(cls):
-        # procedures after tests are finished. This code block is executed only once
+        pass
 
     def setUp(self):
-        # procedures before every tests are started. This code block is executed every time
+        pass
 
     def tearDown(self):
         # procedures after every tests are finished. This code block is executed every time
+        pass
 
-    def test_core(self):
-        # one test case. here. 
-        # You must “test_” prefix always. Unless, unittest ignores
+    def test_predict_lifetable(self):
+        from actuapy.core import LifeTable
+        df = pd.read_csv(test_data_path+"core_lifetable.csv",dtype={0:str})
+        df.set_index('Unnamed: 0',inplace=True)
+        lt = LifeTable(df,datatype="lifetable")
+        assert is_same_df(lt.lifetable.l,df),"lifetable.l"
+        df=pd.read_csv(test_data_path+"core_lifetable_d.csv",dtype={0:str})
+        df.set_index('Unnamed: 0',inplace=True)
+        assert is_same_df(lt.lifetable.d,df),"lifetable.d"
+        df = pd.read_csv(test_data_path+"core_lifetable_quit_rate.csv",dtype={0:str})
+        df.set_index('Unnamed: 0',inplace=True)
+        assert is_same_df(lt.quit_rate,df),"quit_rate"
+        
 
 
 if __name__ == '__main__':
