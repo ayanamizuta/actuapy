@@ -6,8 +6,8 @@
 
 __author__ = "Rei Mizuta <ayanamizuta832@gmail.com>"
 __status__ = "production"
-__version__ = "0.0.2"
-__date__    = "28 July 2019"
+__version__ = "0.0.3"
+__date__    = "30 July 2019"
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,10 +18,10 @@ from .helper import *
 class LifeTable:
     "生命表または取引のデータから脱退率の計算をします"
     def __init__(self,df=None,\
-                 datatype="entry",\
+                 datatype="lifetable",\
                  userid_col="",\
                  time_col="",\
-                 age_vol="",\
+                 age_col="",\
                  time_seq=[],\
                  age_seq=[],
                  varbose=False):
@@ -64,6 +64,7 @@ class LifeTable:
 
         # init variables
         self.datatype  = datatype
+        self.userid_col = userid_col
         # based on actuarial variablesm except external 'a'
         self.lifetable = type('PureLifeTable',(object,),{"l":None,"d":None,"a":None})
         
@@ -73,7 +74,6 @@ class LifeTable:
             self.time_seq   = df.columns.tolist()
             assert len(self.time_seq) > 1,"There is at most one time value"
             
-            self.time_seq       = df.columns.tolist()
             self.age_seq        = df.index.tolist()
             self.lifetable.l    = df
             self.__init_lifetable_d()
@@ -86,8 +86,15 @@ class LifeTable:
         
 
     def __transaction_to_lifetable(self,df):
-        #stub
-        self.lifetable.l = df
+        self.lifetable.l = pd.DataFrame({})
+        for t in self.time_seq:
+            ser_time = df[df[self.time_col]==t].groupby(self.age_col).count()[self.userid_col]
+            self.lifetable.l[str(t)] = ser_time
+
+        self.lifetable.d = pd.DataFrame({},columns=self.time_seq[:-1])
+        for idx in range(len(self.age_seq)-1):
+            quit_num = [len(a-b) for (a,b) in zip()] self.lifetable.l.iloc[idx].values[:-1] - self.lifetable.l.iloc[idx+1].values[1:]
+            self.lifetable.d = self.lifetable.d.append(pd.Series(quit_num,name=self.lifetable.l.index[idx],index=self.lifetable.d.columns))
 
     def __init_lifetable_d(self):
         # after calculating l
@@ -105,7 +112,11 @@ class LifeTable:
         for t_pred in self.time_seq[:-1]:
             arr_pred = dfs.l[t_pred].values
             arr_next = dfs.d[t_pred].values
-            quit_rate = pd.Series([arr_next[idx]/arr_pred[idx] for idx in range(len(self.age_seq)-1)],name=t_pred,index=self.quit_rate.columns)
+            def maybediv(a,b):
+                if b==0:
+                    return 0
+                return a/b
+            quit_rate = pd.Series([maybediv(arr_next[idx],arr_pred[idx]) for idx in range(len(self.age_seq)-1)],name=t_pred,index=self.quit_rate.columns)
             self.quit_rate = self.quit_rate.append(quit_rate)
         
     def predict(self):
