@@ -22,9 +22,10 @@ except IOError:
 
 setup(
     name='actuapy',
-    version='0.0.1',
+    version='0.0.2',
     description='useful snippets for actuaries',
     long_description=readme,
+    long_description_content_type=”text/markdown”,
     author='Rei Mizuta',
     author_email='ayanamizuta832@gmail.com',
     install_requires=read_requirements(),

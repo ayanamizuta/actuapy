@@ -6,7 +6,7 @@
 
 __author__ = "Rei Mizuta <ayanamizuta832@gmail.com>"
 __status__ = "production"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __date__    = "28 July 2019"
 
 import pandas as pd
