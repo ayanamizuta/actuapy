@@ -1,9 +1,14 @@
 *~
 
 #python-package
+.eggs/
 *.egg-info/
 build
 dist
 
 #python
 __pycache__
+
+#jupyter
+.ipynb_checkpoints/
+notebook/

@@ -33,7 +33,20 @@ class TestCore(unittest.TestCase):
         df = pd.read_csv(test_data_path+"core_lifetable_quit_rate.csv",dtype={0:str})
         df.set_index('Unnamed: 0',inplace=True)
         assert is_same_df(lt.quit_rate,df),"quit_rate"
-        
+
+    def test_predict_entry(self):
+        from actuapy.core import LifeTable
+        df = pd.read_csv(test_data_path+"core_entry.csv")
+        lt = LifeTable(df,datatype="entry",userid_col='id',time_col='year',age_col='age')
+        df = pd.read_csv(test_data_path+"core_entry_l.csv")
+        df.set_index('Unnamed: 0',inplace=True)
+        assert is_same_df(lt.lifetable.l,df),"lifetable.l"
+        df = pd.read_csv(test_data_path+"core_entry_d.csv")
+        df.set_index('Unnamed: 0',inplace=True)
+        assert is_same_df(lt.lifetable.d,df),"lifetable.d"
+        df = pd.read_csv(test_data_path+"core_entry_quit_rate.csv")
+        df.set_index('Unnamed: 0',inplace=True)
+        assert is_same_df(lt.quit_rate,df),"quit_rate"
 
 
 if __name__ == '__main__':
