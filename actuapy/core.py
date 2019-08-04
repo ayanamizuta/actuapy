@@ -68,6 +68,7 @@ class LifeTable:
 
         # init variables
         self.datatype  = datatype
+        self.userid_col = userid_col
         # based on actuarial variablesm except external 'a'
         self.lifetable = type('PureLifeTable',(object,),{"l":None,"d":None,"a":None})
 
